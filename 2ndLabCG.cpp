@@ -36,7 +36,8 @@ void RenderSceneCB()
         0.0f, sinf(scale), 0.0f, 0.0f,
         0.0f, 0.0f, sinf(scale), 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f);
-    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixResize));
+    glm::mat4 myMatrixTransformation = myMatrixMove * myMatrixRotateZ * myMatrixRotateY * myMatrixResize;
+    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixTransformation));
 
     glutSwapBuffers();
     glDisableVertexAttribArray(0);
