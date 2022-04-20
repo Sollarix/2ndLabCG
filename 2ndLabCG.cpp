@@ -1,20 +1,57 @@
-﻿// 2ndLabCG.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+#include<iostream>
+#include<GL/glew.h>
+#include<GL/freeglut.h>
+#include<glm/vec3.hpp>
+#include<glm/mat4x4.hpp>
 
-#include <iostream>
+GLuint VBO;
+float scale = 0.000f;
 
-int main()
+void RenderSceneCB()
 {
-    std::cout << "Hello World!\n";
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    scale += 0.0025f;
+
+    glEnableVertexAttribArray(0);
+    glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    //Triangle move
+    glm::mat4 myMatrixMove(1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        sinf(scale), 0.0f, 0.0f, 1.0f);
+    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixMove));
+
+    glutSwapBuffers();
+    glDisableVertexAttribArray(0);
+    glutIdleFunc(RenderSceneCB);
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowSize(1024, 768);
+    glutInitWindowPosition(200, 50);
+    glutCreateWindow("Lab Work 2");
+    GLenum res = glewInit();
+    if (res != GLEW_OK)
+    {
+        fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+        return 1;
+    }
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+    glm::vec3 Vertices[3] = { {0.25f, 0.25f, 0.0f}, {-0.25f, 0.25f, 0.0f}, {0.0f, -0.25f, 0.0f} };
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glutDisplayFunc(RenderSceneCB);
+    glutMainLoop();
+}
