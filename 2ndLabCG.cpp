@@ -31,8 +31,12 @@ void RenderSceneCB()
         0.0f, 1.0f, 0.0f, 0.0f,
         sinf(scale), 0.0f, cosf(scale), 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f);
-
-    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixRotateZ));
+    //Triangle size
+    glm::mat4 myMatrixResize(sinf(scale), 0.0f, 0.0f, 0.0f,
+        0.0f, sinf(scale), 0.0f, 0.0f,
+        0.0f, 0.0f, sinf(scale), 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixResize));
 
     glutSwapBuffers();
     glDisableVertexAttribArray(0);
