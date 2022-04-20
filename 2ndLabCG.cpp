@@ -22,7 +22,17 @@ void RenderSceneCB()
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         sinf(scale), 0.0f, 0.0f, 1.0f);
-    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixMove));
+    //Triangle rotation
+    glm::mat4 myMatrixRotateZ(cosf(scale), sinf(scale), 0.0f, 0.0f,
+        -sinf(scale), cosf(scale), 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+    glm::mat4 myMatrixRotateY(cosf(scale), 0.0f, -sinf(scale), 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        sinf(scale), 0.0f, cosf(scale), 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
+
+    glLoadMatrixf(reinterpret_cast<const float*>(&myMatrixRotateZ));
 
     glutSwapBuffers();
     glDisableVertexAttribArray(0);
